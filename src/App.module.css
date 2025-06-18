@@ -1,0 +1,53 @@
+.calculator {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-top: 50px;
+}
+
+.display {
+	font-size: 2rem;
+	margin-bottom: 20px;
+	width: 220px;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #f1f1f1;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	transition: color 0.3s ease; /* Плавный переход для изменения цвета */
+}
+
+.display.result {
+	color: green; /* Цвет для результата */
+}
+
+.display.normal {
+	color: black; /* Цвет для обычного ввода */
+}
+
+.buttons {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	grid-gap: 10px;
+	width: 230px;
+}
+
+.button {
+	padding: 20px;
+	font-size: 1.5rem;
+	background-color: #f1f1f1;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.2s;
+}
+
+.button:hover {
+	background-color: #ddd;
+}
+
+.button:active {
+	background-color: #ccc;
+}

@@ -1,0 +1,36 @@
+{
+	"name": "react_result-university",
+	"private": true,
+	"version": "1.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview",
+		"lint": "eslint src --ext .js,.jsx",
+		"lint:fix": "eslint src --ext .js,.jsx --fix",
+		"format": "prettier --write .",
+		"check:deps": "depcheck",
+		"server": "json-server --watch db.json --port 3001"
+	},
+	"dependencies": {
+		"prop-types": "^15.8.1",
+		"react": "^19.0.0",
+		"react-dom": "^19.0.0",
+		"react-router-dom": "^7.6.2"
+	},
+	"devDependencies": {
+		"@eslint/js": "^9.26.0",
+		"@vitejs/plugin-react-swc": "^3.8.0",
+		"depcheck": "^1.4.7",
+		"eslint": "^9.26.0",
+		"eslint-plugin-import": "^2.31.0",
+		"eslint-plugin-jsx-a11y": "^6.10.2",
+		"eslint-plugin-react-hooks": "^5.2.0",
+		"eslint-plugin-react-refresh": "^0.4.20",
+		"globals": "^15.15.0",
+		"json-server": "^1.0.0-beta.3",
+		"prettier": "^3.5.3",
+		"vite": "6.3.4"
+	}
+}
