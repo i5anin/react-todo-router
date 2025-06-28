@@ -1,20 +1,9 @@
-import { useEffect, useState } from 'react'
-
 import { TaskCard } from '../components/TaskCard'
 import { TaskForm } from '../components/TaskForm'
-import { getTasks, createTask } from '../api/tasks'
+import { useTasks } from '../hooks/useTasks'
 
 export function HomePage() {
-	const [tasks, setTasks] = useState([])
-
-	useEffect(() => {
-		getTasks().then(setTasks)
-	}, [])
-
-	const addTask = async (task) => {
-		const newTask = await createTask(task)
-		setTasks([...tasks, newTask])
-	}
+	const { tasks, addTask } = useTasks()
 
 	return (
 		<>

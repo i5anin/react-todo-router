@@ -1,33 +1,33 @@
-const API = 'http://localhost:3001/tasks'
+const BASE_URL = 'http://localhost:3001/tasks'
 
-export async function getTasks() {
-	const res = await fetch(API)
-	return res.json()
+export const getTasks = async () => {
+	const res = await fetch(BASE_URL)
+	return await res.json()
 }
 
-export async function getTask(id) {
-	const res = await fetch(`${API}/${id}`)
-	return res.json()
+export const getTask = async (id) => {
+	const res = await fetch(`${BASE_URL}/${id}`)
+	return await res.json()
 }
 
-export async function createTask(data) {
-	const res = await fetch(API, {
+export const createTask = async (task) => {
+	const res = await fetch(BASE_URL, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify(data)
+		body: JSON.stringify(task),
 	})
-	return res.json()
+	return await res.json()
 }
 
-export async function updateTask(id, data) {
-	const res = await fetch(`${API}/${id}`, {
+export const updateTask = async (id, task) => {
+	const res = await fetch(`${BASE_URL}/${id}`, {
 		method: 'PUT',
 		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify(data)
+		body: JSON.stringify(task),
 	})
-	return res.json()
+	return await res.json()
 }
 
-export async function deleteTask(id) {
-	await fetch(`${API}/${id}`, { method: 'DELETE' })
+export const deleteTask = async (id) => {
+	await fetch(`${BASE_URL}/${id}`, { method: 'DELETE' })
 }
