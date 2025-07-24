@@ -14,8 +14,22 @@ export function TaskForm({ onAdd }) {
 
 	return (
 		<form onSubmit={submit}>
-			<input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Заголовок" />
-			<textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Описание" />
+			<input
+				id="task-title"
+				name="title"
+				value={title}
+				onChange={(e) => setTitle(e.target.value)}
+				placeholder="Заголовок"
+			/>
+
+			<textarea
+				id="task-description"
+				name="description"
+				value={description}
+				onChange={(e) => setDescription(e.target.value)}
+				placeholder="Описание"
+			/>
+
 			<button type="submit">Добавить</button>
 		</form>
 	)

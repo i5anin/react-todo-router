@@ -1,9 +1,9 @@
-import { TaskCard } from '../components/TaskCard'
-import { TaskForm } from '../components/TaskForm'
-import { useTasks } from '../hooks/useTasks'
+import { TaskCard } from '../components/TaskCard';
+import { TaskForm } from '../components/TaskForm';
+import { useTasks } from '../context/TasksContext';
 
 export function HomePage() {
-	const { tasks, addTask } = useTasks()
+	const { tasks, addTask } = useTasks();
 
 	return (
 		<>
@@ -14,5 +14,5 @@ export function HomePage() {
 				))}
 			</div>
 		</>
-	)
+	);
 }

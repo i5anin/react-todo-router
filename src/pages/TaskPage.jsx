@@ -1,20 +1,28 @@
-import { useNavigate, useParams } from 'react-router-dom'
-import { useTask } from '../hooks/useTask'
+import { useNavigate, useParams } from 'react-router-dom';
+import { useState } from 'react'; // 🔹 Обязательный импорт
+import { useTasks } from '../context/TasksContext';
 
 export function TaskPage() {
-	const { id } = useParams()
-	const navigate = useNavigate()
+	const { id } = useParams();
+	const navigate = useNavigate();
 
-	const {
-		task,
-		editMode,
-		toggleEdit,
-		updateField,
-		save,
-		remove
-	} = useTask(id, () => navigate('/'))
+	const { tasks, updateTask, removeTask } = useTasks();
 
-	if (!task) return <p>Загрузка...</p>
+	const task = tasks.find(t => t.id === id);
+	const [editMode, setEditMode] = useState(false);
+
+	const toggleEdit = () => setEditMode(prev => !prev);
+
+	const updateField = (field, value) => {
+		if (!task) return;
+		updateTask(task.id, { ...task, [field]: value });
+	};
+
+	const save = () => {
+		toggleEdit();
+	};
+
+	if (!task) return <p>Загрузка...</p>;
 
 	return (
 		<>
@@ -40,7 +48,10 @@ export function TaskPage() {
 				</>
 			)}
 
-			<button onClick={remove}>Удалить</button>
+			<button onClick={() => {
+				removeTask(task.id);
+				navigate('/');
+			}}>Удалить</button>
 		</>
-	)
+	);
 }
