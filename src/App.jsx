@@ -3,10 +3,13 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { HomePage } from './pages/HomePage'
 import { TaskPage } from './pages/TaskPage'
 import { NotFoundPage } from './pages/NotFoundPage'
+import { Loader } from './shared/ui/Loader.jsx';
 
 function App() {
 	return (
+
 		<BrowserRouter>
+			<Loader />
 			<Routes>
 				<Route path="/" element={<HomePage />} />
 				<Route path="/task/:id" element={<TaskPage />} />

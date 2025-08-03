@@ -1,36 +1,44 @@
-import { useState } from 'react'
+import { useState } from 'react';
 
-export function TaskForm({ onAdd }) {
-	const [title, setTitle] = useState('')
-	const [description, setDescription] = useState('')
+/**
+ * Форма создания задачи
+ * @param {Function} onAdd - функция добавления задачи
+ * @param {boolean} saving - флаг состояния загрузки
+ */
+export function TaskForm({ onAdd, saving }) {
+	const [title, setTitle] = useState('');
+	const [description, setDescription] = useState('');
 
-	const submit = (e) => {
-		e.preventDefault()
-		if (!title.trim()) return
-		onAdd({ title, description })
-		setTitle('')
-		setDescription('')
-	}
+	const handleSubmit = (event) => {
+		event.preventDefault();
+
+		if (!title.trim()) return;
+
+		onAdd({ title, description });
+		setTitle('');
+		setDescription('');
+	};
 
 	return (
-		<form onSubmit={submit}>
+		<form onSubmit={handleSubmit}>
 			<input
-				id="task-title"
+				type="text"
 				name="title"
 				value={title}
-				onChange={(e) => setTitle(e.target.value)}
 				placeholder="Заголовок"
+				onChange={(e) => setTitle(e.target.value)}
 			/>
 
 			<textarea
-				id="task-description"
 				name="description"
 				value={description}
-				onChange={(e) => setDescription(e.target.value)}
 				placeholder="Описание"
+				onChange={(e) => setDescription(e.target.value)}
 			/>
 
-			<button type="submit">Добавить</button>
+			<button type="submit" disabled={saving}>
+				{saving ? 'Сохраняем...' : 'Добавить'}
+			</button>
 		</form>
-	)
+	);
 }
