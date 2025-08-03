@@ -1,28 +1,41 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { useState } from 'react'; // 🔹 Обязательный импорт
+import { useState, useEffect, useCallback } from 'react';
+
 import { useTasks } from '../context/TasksContext';
 
 export function TaskPage() {
 	const { id } = useParams();
 	const navigate = useNavigate();
+	const { tasks, updateTask, removeTask, loading, error } = useTasks();
 
-	const { tasks, updateTask, removeTask } = useTasks();
-
-	const task = tasks.find(t => t.id === id);
 	const [editMode, setEditMode] = useState(false);
+	const [localTask, setLocalTask] = useState(null);
 
-	const toggleEdit = () => setEditMode(prev => !prev);
+	// Ищем задачу при загрузке или изменении tasks
+	useEffect(() => {
+		const found = tasks.find(t => t.id === id);
+		if (found) setLocalTask(found);
+	}, [id, tasks]);
 
-	const updateField = (field, value) => {
-		if (!task) return;
-		updateTask(task.id, { ...task, [field]: value });
-	};
+	const toggleEdit = useCallback(() => {
+		setEditMode(prev => !prev);
+	}, []);
 
-	const save = () => {
-		toggleEdit();
-	};
+	const updateField = useCallback((field, value) => {
+		if (!localTask) return;
+		const updated = { ...localTask, [field]: value };
+		setLocalTask(updated);
+		updateTask(localTask.id, updated);
+	}, [localTask, updateTask]);
 
-	if (!task) return <p>Загрузка...</p>;
+	const handleDelete = useCallback(async () => {
+		await removeTask(id);
+		navigate('/');
+	}, [id, removeTask, navigate]);
+
+	if (loading) return <p>Загрузка задачи...</p>;
+	if (error) return <p style={{ color: 'red' }}>Ошибка: {error.message}</p>;
+	if (!localTask) return <p>Задача не найдена</p>;
 
 	return (
 		<>
@@ -31,27 +44,24 @@ export function TaskPage() {
 			{editMode ? (
 				<>
 					<input
-						value={task.title}
+						value={localTask.title}
 						onChange={e => updateField('title', e.target.value)}
 					/>
 					<textarea
-						value={task.description}
+						value={localTask.description}
 						onChange={e => updateField('description', e.target.value)}
 					/>
-					<button onClick={save}>Сохранить</button>
+					<button onClick={toggleEdit}>Сохранить</button>
 				</>
 			) : (
 				<>
-					<h2>{task.title}</h2>
-					<p>{task.description}</p>
+					<h2>{localTask.title}</h2>
+					<p>{localTask.description}</p>
 					<button onClick={toggleEdit}>Редактировать</button>
 				</>
 			)}
 
-			<button onClick={() => {
-				removeTask(task.id);
-				navigate('/');
-			}}>Удалить</button>
+			<button onClick={handleDelete}>Удалить</button>
 		</>
 	);
 }
