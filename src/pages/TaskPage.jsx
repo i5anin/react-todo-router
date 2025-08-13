@@ -6,33 +6,53 @@ import { useTasks } from '../context/TasksContext';
 export function TaskPage() {
 	const { id } = useParams();
 	const navigate = useNavigate();
-	const { tasks, updateTask, removeTask, loading, error } = useTasks();
+	const {
+		tasks,
+		getTaskById,
+		updateTask,
+		removeTask,
+		loading,
+		error
+	} = useTasks();
 
 	const [editMode, setEditMode] = useState(false);
 	const [localTask, setLocalTask] = useState(null);
 
-	// Ищем задачу при загрузке или изменении tasks
+	// Загружаем задачу при загрузке компонента
 	useEffect(() => {
-		const found = tasks.find(t => t.id === id);
-		if (found) setLocalTask(found);
-	}, [id, tasks]);
+		const load = async () => {
+			const task = tasks.find(t => t.id === id) || await getTaskById(id);
+			setLocalTask(task);
+		};
 
+		load();
+	}, [id, tasks, getTaskById]);
+
+	// Включить/выключить режим редактирования
 	const toggleEdit = useCallback(() => {
 		setEditMode(prev => !prev);
 	}, []);
 
+	// Обновить поле в локальном состоянии
 	const updateField = useCallback((field, value) => {
 		if (!localTask) return;
-		const updated = { ...localTask, [field]: value };
-		setLocalTask(updated);
-		updateTask(localTask.id, updated);
-	}, [localTask, updateTask]);
+		setLocalTask(prev => ({ ...prev, [field]: value }));
+	}, [localTask]);
 
+	// Сохранить изменения на сервере
+	const handleSave = useCallback(async () => {
+		if (!localTask) return;
+		await updateTask(id, localTask);
+		setEditMode(false);
+	}, [id, localTask, updateTask]);
+
+	// Удаление задачи
 	const handleDelete = useCallback(async () => {
 		await removeTask(id);
 		navigate('/');
 	}, [id, removeTask, navigate]);
 
+	// UI
 	if (loading) return <p>Загрузка задачи...</p>;
 	if (error) return <p style={{ color: 'red' }}>Ошибка: {error.message}</p>;
 	if (!localTask) return <p>Задача не найдена</p>;
@@ -51,7 +71,7 @@ export function TaskPage() {
 						value={localTask.description}
 						onChange={e => updateField('description', e.target.value)}
 					/>
-					<button onClick={toggleEdit}>Сохранить</button>
+					<button onClick={handleSave}>Сохранить</button>
 				</>
 			) : (
 				<>
