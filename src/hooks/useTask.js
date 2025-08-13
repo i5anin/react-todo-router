@@ -1,14 +1,20 @@
 import { useEffect, useState } from 'react'
+import { useTasks } from '../context/TasksContext'
 
-import { getTask, updateTask, deleteTask } from '../api/tasks'
-
+/**
+ * Хук для работы с одной задачей по её ID
+ * @param {string} id - идентификатор задачи
+ * @param {Function} onDelete - колбэк при удалении задачи
+ */
 export function useTask(id, onDelete) {
+	const { getTaskById, updateTask, removeTask } = useTasks()
+
 	const [task, setTask] = useState(null)
 	const [editMode, setEditMode] = useState(false)
 
 	useEffect(() => {
-		getTask(id).then(setTask)
-	}, [id])
+		getTaskById(id).then(setTask)
+	}, [id, getTaskById])
 
 	const save = async () => {
 		await updateTask(id, task)
@@ -16,14 +22,15 @@ export function useTask(id, onDelete) {
 	}
 
 	const remove = async () => {
-		await deleteTask(id)
+		await removeTask(id)
 		onDelete?.()
 	}
 
 	const toggleEdit = () => setEditMode(prev => !prev)
 
-	const updateField = (field, value) =>
+	const updateField = (field, value) => {
 		setTask(prev => ({ ...prev, [field]: value }))
+	}
 
 	return {
 		task,
