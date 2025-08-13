@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import {
 	getTasks as apiGetTasks,
 	createTask as apiCreateTask,
+	getTask as apiGetTask,
 	updateTask as apiUpdateTask,
 	deleteTask as apiDeleteTask,
 } from '../api/tasks';
@@ -67,8 +68,17 @@ export const TasksProvider = ({ children }) => {
 		}
 	};
 
-	if (loading) return <p>Загрузка задач...</p>;
-	if (error) return <p style={{ color: 'red' }}>Ошибка: {error.message}</p>;
+	const getTaskById = async (id) => {
+		setLoading(true);
+		try {
+			return await apiGetTask(id);
+		} catch (err) {
+			setError(err);
+			return null;
+		} finally {
+			setLoading(false);
+		}
+	};
 
 	return (
 		<TasksContext.Provider
@@ -77,6 +87,7 @@ export const TasksProvider = ({ children }) => {
 				addTask,
 				updateTask,
 				removeTask,
+				getTaskById,
 				loading,
 				saving,
 				deleting,
@@ -87,6 +98,7 @@ export const TasksProvider = ({ children }) => {
 		</TasksContext.Provider>
 	);
 };
+
 
 export const useTasks = () => {
 	const ctx = useContext(TasksContext);
